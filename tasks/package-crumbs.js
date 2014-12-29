@@ -5,7 +5,7 @@ var _ = require('lodash');
 var gift = require('gift');
 
 var ENV_CRUMBS = 'CRUMBS';
-var CRUMBS_FILE_NAME = 'crumbs.txt';
+var CRUMBS_FILE_NAME = 'deps.crumbs';
 
 // returns q promise that resolves with HEAD of current git repo
 var getRepoHead = function () {
