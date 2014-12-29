@@ -28,7 +28,9 @@ module.exports = function (grunt) {
             })
             .then(function (head) {
                 crumbs[pkg.name] = head;
-                grunt.file.write(CRUMBS_FILE_NAME, ENV_CRUMBS + '=' + JSON.stringify(crumbs)) + '\n';
+                var crumbsFileBody = ENV_CRUMBS + '=' + JSON.stringify(crumbs) + '\n';
+                grunt.file.write(CRUMBS_FILE_NAME, crumbsFileBody);
+                grunt.log.ok('wrote file: %s\n%s', CRUMBS_FILE_NAME, crumbsFileBody);
             })
             .then(function () {
                 done();
