@@ -38,4 +38,14 @@ module.exports = function (grunt) {
             })
             .done();
     });
+
+    // read CRUMBS from the environment and overwrite any package.json dependency REFS
+    // with specific commits
+    grunt.registerTask('crumbs:overwrite', function () {
+        var done = this.async();
+        var crumbs = process.env[ENV_CRUMBS];
+        console.log(crumbs);
+        console.log(typeof crumbs);
+        console.log(JSON.parse(crumbs));
+    });
 };
