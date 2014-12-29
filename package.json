@@ -1,0 +1,19 @@
+{
+  "name": "grunt-jenkins-helpers",
+  "version": "0.0.1",
+  "description": "A collection of grunt tasks for aiding in the building of multi-repo projects on jenkins around npm's package.json's",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/benjroy/grunt-jenkins-helpers.git"
+  },
+  "author": "Benjamin Allen",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/benjroy/grunt-jenkins-helpers/issues"
+  },
+  "homepage": "https://github.com/benjroy/grunt-jenkins-helpers"
+}
