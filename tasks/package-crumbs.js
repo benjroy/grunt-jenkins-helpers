@@ -19,7 +19,12 @@ module.exports = function (grunt) {
     grunt.registerTask('crumbs:record', function () {
         var done = this.async();
         var pkg = grunt.file.readJSON('package.json');
-        var crumbs = process.env[ENV_CRUMBS] || {};
+        var crumbs;
+        try {
+            crumbs = JSON.parse(process.env[ENV_CRUMBS]);
+        } catch (err) {
+            crumbs = {};
+        }
 
         q.resolve()
             .then(function () {
