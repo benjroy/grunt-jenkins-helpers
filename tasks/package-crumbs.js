@@ -7,10 +7,18 @@ var gift = require('gift');
 var ENV_CRUMBS = 'CRUMBS';
 var CRUMBS_FILE_NAME = 'deps.crumbs';
 
-// returns q promise that resolves with HEAD of current git repo
-var getRepoHead = function () {
-    var repo = gift(__dirname);
-    return q.nbind(repo.current_commit_id, repo)();
+var PKG_DEPS_LIST_KEYS = ['dependencies', 'devDependencies', 'optionalDependencies'];
+
+var isGitUrl = function (url) {
+    return url.indexOf('://') > 0;
+};
+
+var getGitUrlRevision = function (url) {
+    return url.split('#')[1];
+};
+
+var replaceGitUrlRevision = function (url, revision) {
+    return url.split('#').slice(0, 1).concat(revision).join('#');
 };
 
 module.exports = function (grunt) {
@@ -28,11 +36,25 @@ module.exports = function (grunt) {
 
         q.resolve()
             .then(function () {
+                //read package.json deps and look for any specific revisions in git-url dependencies
+                _.each(PKG_DEPS_LIST_KEYS, function (depsKey) {
+                    _.each(pkg[depsKey], function (val, key, obj) {
+                        if (!isGitUrl(val)) { return; }
+                        var revision = getGitUrlRevision(val);
+                        if (revision && !crumbs[key]) {
+                            crumbs[key] = revision;
+                        }
+                    });
+                });
+            })
+            .then(function () {
                 var repo = gift(__dirname);
                 return q.nbind(repo.current_commit_id, repo)();
             })
             .then(function (head) {
                 crumbs[pkg.name] = head;
+            })
+            .then(function () {
                 var crumbsFileBody = ENV_CRUMBS + '=' + JSON.stringify(crumbs) + '\n';
                 grunt.file.write(CRUMBS_FILE_NAME, crumbsFileBody);
                 grunt.log.ok('wrote file: %s\n%s', CRUMBS_FILE_NAME, crumbsFileBody);
@@ -68,12 +90,11 @@ module.exports = function (grunt) {
             return;
         }
 
-        // find modules to overwrite in dependency dictionaries in package.json
-        _.each(['dependencies', 'devDependencies', 'optionalDependencies'], function (depsKey) {
+        _.each(PKG_DEPS_LIST_KEYS, function (depsKey) {
             _.each(pkg[depsKey], function (val, key, obj) {
-                if (val.indexOf('://') > 0 && _.contains(crumbKeys, key)) {
+                if (isGitUrl(val) && _.contains(crumbKeys, key)) {
                     // overwrite the commit-ish on the dependencies git url
-                    var url = val.split('#').slice(0, 1).concat(crumbs[key]).join('#');
+                    var url = replaceGitUrlRevision(val, crumbs[key]);
                     grunt.log.warn('Overwriting dependency url for %s in %s to %s', key, depsKey, url);
                     obj[key] = url;
                 }
