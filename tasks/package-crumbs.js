@@ -139,8 +139,10 @@ module.exports = function (grunt) {
         }
 
         // post to notary server
+        var url = NOTARY_URL + '?' + queryString.stringify(params);
+        console.log('url is %s', url);
         http.request({
-            url: NOTARY_URL + '?' + queryString.stringify(params),
+            url: url,
             method: 'POST'
         })
         .then(function (resp) {
