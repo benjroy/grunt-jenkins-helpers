@@ -147,6 +147,9 @@ module.exports = function (grunt) {
             method: 'POST'
         })
         .then(function (resp) {
+            console.log('response status is: ', resp.status);
+            console.log('response body is: ', resp.body);
+            console.log('response headers are: ', resp.headers);
             console.log('response is: ', resp);
             done(false);
         }, function (resp) {
