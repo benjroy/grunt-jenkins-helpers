@@ -4,6 +4,9 @@ var q = require('q');
 var _ = require('lodash');
 var gift = require('gift');
 
+var http = require('q-io/http');
+var queryString = require('query-string');
+
 var ENV_CRUMBS = 'CRUMBS';
 var CRUMBS_FILE_NAME = 'deps.crumbs';
 
@@ -103,5 +106,52 @@ module.exports = function (grunt) {
 
         // write changes back to package.json file
         grunt.file.write('package.json', JSON.stringify(pkg, null, 2));
+    });
+
+    // USED IN JENKINS SIGNING TJOB TO POLL NOTARY SERVER UNTIL COMPLETE
+    grunt.registerTask('crumbs:sign', function () {
+        var done = this.async();
+        var NOTARY_URL = 'https://notary.bittorrent.com/api/v1/jobs';
+        // assert env variables
+        var params = {
+            input_file_path: process.env.input_file_path,
+            output_sig_types: process.env.output_sig_types,
+            track: process.env.track,
+            app_name: process.env.app_name,
+            platform: process.env.platform,
+            job_name_input: process.env.job_name_input,
+            build_num: process.env.build_num,
+            app_url: process.env.app_url
+        };
+
+        var missingParams = _.reduce(_.keys(params), function (memo, key) {
+            if (!params[key]) {
+                memo.push(key);
+            } else {
+                grunt.log.ok('%s: %s', key, val)
+            }
+            return memo;
+        }, []);
+
+        if (missingParams.length) {
+            grunt.log.error('Missing environment variables: %s', missingParams.join(', '));
+            return done(false);
+        }
+
+        // post to notary server
+        http.request({
+            url: NOTARY_URL + '?' + queryString.stringify(params),
+            method: 'POST'
+        })
+        .then(function (resp) {
+            console.log('response is: ', resp);
+            done(false);
+        });
+
+        // poll unitl finished
+
+        // check on output
+
+        // download output
     });
 };
