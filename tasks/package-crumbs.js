@@ -128,7 +128,7 @@ module.exports = function (grunt) {
             if (!params[key]) {
                 memo.push(key);
             } else {
-                grunt.log.ok('%s: %s', key, val)
+                grunt.log.ok('%s: %s', key, params[key])
             }
             return memo;
         }, []);
