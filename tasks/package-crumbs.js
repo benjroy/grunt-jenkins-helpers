@@ -159,7 +159,7 @@ module.exports = function (grunt) {
             done(false);
         })
         .then(function (respBody) {
-            console.log('response body is: ', respBody);
+            console.log('response body is: ', respBody.toString('utf-8'));
             done(false);
         });
 
