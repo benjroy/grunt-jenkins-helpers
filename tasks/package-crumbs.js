@@ -148,12 +148,18 @@ module.exports = function (grunt) {
         })
         .then(function (resp) {
             console.log('response status is: ', resp.status);
-            console.log('response body is: ', resp.body);
+            // console.log('response body is: ', resp.body);
             console.log('response headers are: ', resp.headers);
-            console.log('response is: ', resp);
-            done(false);
+            // console.log('response is: ', resp);
+
+            return resp.body.read()
+
         }, function (resp) {
             console.log('ERRORED response: ', resp);
+            done(false);
+        })
+        .then(function (respBody) {
+            console.log('response body is: ', respBody);
             done(false);
         });
 
