@@ -148,6 +148,9 @@ module.exports = function (grunt) {
         .then(function (resp) {
             console.log('response is: ', resp);
             done(false);
+        }, function (resp) {
+            console.log('ERRORED response: ', resp);
+            done(false);
         });
 
         // poll unitl finished
