@@ -111,8 +111,8 @@ module.exports = function (grunt) {
     // USED IN JENKINS SIGNING TJOB TO POLL NOTARY SERVER UNTIL COMPLETE
     grunt.registerTask('crumbs:sign', function () {
         var done = this.async();
-        // var NOTARY_URL = 'https://notary.bittorrent.com/api/v1/jobs';
-        var NOTARY_URL = 'https://notary-01.prod.falcon.utorrent.com/api/v1/jobs'
+        var NOTARY_URL = 'https://notary.bittorrent.com/api/v1/jobs';
+        //var NOTARY_URL = 'https://notary-01.prod.falcon.utorrent.com/api/v1/jobs'
         // assert env variables
         var params = {
             input_file_path: process.env.input_file_path,
