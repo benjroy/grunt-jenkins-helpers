@@ -4,6 +4,7 @@ var q = require('q');
 var _ = require('lodash');
 var gift = require('gift');
 var request = require('request-json');
+var queryString = require('query-string');
 
 var ENV_CRUMBS = 'CRUMBS';
 var CRUMBS_FILE_NAME = 'deps.crumbs';
@@ -144,10 +145,7 @@ module.exports = function (grunt) {
         //var NOTARY_URL = 'https://notary-01.prod.falcon.utorrent.com/api/v1/jobs'
         var client = request.newClient(NOTARY_HOST);
 
-        client.post({
-            url: NOTARY_API_PATH,
-            formData: params
-        }, function (err, res, body) {
+        client.post(NOTARY_API_PATH + '?' + queryString.stringify(params), function (err, res, body) {
             if (err) {
                 grunt.log.error(err);
                 return done(false);
