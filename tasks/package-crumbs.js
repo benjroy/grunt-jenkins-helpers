@@ -140,7 +140,8 @@ module.exports = function (grunt) {
         var NOTARY_API_PATH = 'api/v1/jobs'
         // var NOTARY_URL = 'https://notary.bittorrent.com/api/v1/jobs';
         //var NOTARY_URL = 'https://notary-01.prod.falcon.utorrent.com/api/v1/jobs'
-        var client = request.newClient(NOTARY_URL)
+        var client = request.newClient(NOTARY_HOST);
+    
         client.post(NOTARY_API_PATH, params, function (err, res, body) {
             if (err) {
                 grunt.log.error(err);
