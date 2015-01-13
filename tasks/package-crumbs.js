@@ -144,19 +144,49 @@ module.exports = function (grunt) {
         // var NOTARY_URL = 'https://notary.bittorrent.com/api/v1/jobs';
         //var NOTARY_URL = 'https://notary-01.prod.falcon.utorrent.com/api/v1/jobs'
         var client = request.newClient(NOTARY_HOST);
-        var url = NOTARY_API_PATH + '?' + queryString.encode(params);
+        var postUrl = NOTARY_API_PATH + '?' + queryString.encode(params);
 
-        console.log('url is: %s', url);
+        console.log('postUrl is: %s', postUrl);
 
-        client.post(url, null, function (err, res, body) {
+        client.post(postUrl, null, function (err, res, body) {
             if (err) {
                 grunt.log.error(err);
+                return done(false);
+            }
+            if (!body || body.result !== 'added') {
+                grunt.log.error('expected result to be "added", instead got: %s', body.result)
+                return done(false);
+            }
+            if (!body.job || !body.job.uuid_str) {
+                grunt.log.error('job did not return uuid_str');
                 return done(false);
             }
             console.log('response status: %s', res.statusCode);
             console.log('response body:', body);
 
-            done();
+            var uuid = body.job.uuid_str;
+
+            var pollProgress = function (jobUuid, cb) {
+                var pollUrl = NOTARY_API_PATH + '/' + jobUuid;
+                client.post(pollUrl, function (err, res, body) {
+                    console.log('response status: %s', res.statusCode);
+                    console.log('response body:', body);
+
+                    if (res.statusCode !== 500) {
+                        return setTimeout(function () {
+                            pollProgress(jobUuid);
+                        }, 1000);
+                    } else {
+                        cb(null, 'should be done');
+                    }
+                });
+            };
+
+            pollJobStatus(uuid, function (err, res) {
+                console.error('RES', res);
+                done(false);
+            });
+            //done();
         });
 
         // poll unitl finished
