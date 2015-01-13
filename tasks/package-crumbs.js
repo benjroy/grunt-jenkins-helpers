@@ -167,14 +167,14 @@ module.exports = function (grunt) {
             var uuid = body.job.uuid_str;
 
             var pollJobStatus = function (jobUuid, cb) {
-                var pollUrl = NOTARY_API_PATH + '/' + jobUuid;
+                var pollUrl = NOTARY_API_PATH + '/' + jobUuid.replace(/\-/g, '');
                 console.log('pollUrl is: %s', pollUrl);
 
-                client.get(pollUrl, function (err, res, body) {
-                    console.log('response status: %s', res.statusCode);
+                client.get(pollUrl, function (err, resp, body) {
+                    console.log('response status: %s', resp.statusCode);
                     console.log('response body:', body);
 
-                    if (res.statusCode !== 500) {
+                    if (resp.statusCode !== 500) {
                         return setTimeout(function () {
                             pollJobStatus(jobUuid);
                         }, 1000);
