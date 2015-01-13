@@ -116,7 +116,7 @@ module.exports = function (grunt) {
             track: process.env.track,
             app_name: process.env.app_name,
             platform: process.env.platform,
-            job_name: process.env.job_name,
+            job_name_input: process.env.job_name_input,
             build_num: process.env.build_num,
             app_url: process.env.app_url
         };
@@ -133,6 +133,8 @@ module.exports = function (grunt) {
         if (missingParams.length) {
             grunt.log.error('Missing environment variables: %s', missingParams.join(', '));
             return done(false);
+        } else {
+            params.job_name = params.job_name_input;
         }
 
         // post to notary server
