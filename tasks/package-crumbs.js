@@ -124,8 +124,6 @@ module.exports = function (grunt) {
         var missingParams = _.reduce(_.keys(params), function (memo, key) {
             if (!params[key]) {
                 memo.push(key);
-            } else {
-                grunt.log.ok('%s: %s', key, params[key])
             }
             return memo;
         }, []);
@@ -136,6 +134,8 @@ module.exports = function (grunt) {
         } else {
             params.job_name = params.job_name_input;
         }
+
+        console.log(params);
 
         // post to notary server
         var NOTARY_HOST = 'https://notary.bittorrent.com';
