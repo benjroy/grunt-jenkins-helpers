@@ -146,6 +146,10 @@ module.exports = function (grunt) {
         var client = request.newClient(NOTARY_HOST);
         var postUrl = NOTARY_API_PATH + '?' + queryString.encode(params);
 
+//curl -v -X POST https://notary.bittorrent.com/api/v1/jobs?input_file_path=btbrowser/win/browser-chrome-native-torrent-win/90/chrome.native.torrent.exe&output_sig_types=authenticode,autoupdate&track=beta&app_name=chrome.native.torrent&platform=win&job_name=browser-chrome-native-torrent-win&build_num=90&app_url=http://www.bittorrent.com
+
+        var postUrl = 'api/v1/jobs?input_file_path=btbrowser/win/browser-chrome-native-torrent-win/90/chrome.native.torrent.exe&output_sig_types=authenticode,autoupdate&track=beta&app_name=chrome.native.torrent&platform=win&job_name=browser-chrome-native-torrent-win&build_num=777&app_url=http://www.bittorrent.com'
+
         console.log('postUrl is: %s', postUrl);
 
         client.post(postUrl, null, function (err, res, body) {
