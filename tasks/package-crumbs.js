@@ -3,9 +3,7 @@
 var q = require('q');
 var _ = require('lodash');
 var gift = require('gift');
-
-var http = require('q-io/http');
-var queryString = require('query-string');
+var request = require('request-json');
 
 var ENV_CRUMBS = 'CRUMBS';
 var CRUMBS_FILE_NAME = 'deps.crumbs';
@@ -111,8 +109,6 @@ module.exports = function (grunt) {
     // USED IN JENKINS SIGNING TJOB TO POLL NOTARY SERVER UNTIL COMPLETE
     grunt.registerTask('crumbs:sign', function () {
         var done = this.async();
-        var NOTARY_URL = 'https://notary.bittorrent.com/api/v1/jobs';
-        //var NOTARY_URL = 'https://notary-01.prod.falcon.utorrent.com/api/v1/jobs'
         // assert env variables
         var params = {
             input_file_path: process.env.input_file_path,
@@ -140,27 +136,21 @@ module.exports = function (grunt) {
         }
 
         // post to notary server
-        var url = NOTARY_URL + '?' + queryString.stringify(params);
-        console.log('url is %s', url);
-        http.request({
-            url: url,
-            method: 'POST'
-        })
-        .then(function (resp) {
-            console.log('response status is: ', resp.status);
-            // console.log('response body is: ', resp.body);
-            console.log('response headers are: ', resp.headers);
-            // console.log('response is: ', resp);
+        var NOTARY_HOST = 'https://notary.bittorrent.com';
+        var NOTARY_API_PATH = 'api/v1/jobs'
+        // var NOTARY_URL = 'https://notary.bittorrent.com/api/v1/jobs';
+        //var NOTARY_URL = 'https://notary-01.prod.falcon.utorrent.com/api/v1/jobs'
+        var client = request.newClient(NOTARY_URL)
+        client.post(NOTARY_API_PATH, params, function (err, res, body) {
+            if (err) {
+                grunt.log.error(err);
+                return done(false);
+            }
+            console.log('response status: %s', res.statusCode);
+            console.log('response body: %s', body);
+            console.log('response: ', res);
 
-            return resp.body.read()
-
-        }, function (resp) {
-            console.log('ERRORED response: ', resp);
-            done(false);
-        })
-        .then(function (respBody) {
-            console.log('response body is: ', respBody.toString('utf-8'));
-            done(false);
+            done();
         });
 
         // poll unitl finished
