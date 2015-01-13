@@ -178,7 +178,9 @@ module.exports = function (grunt) {
                     console.log('response status: %s', resp.statusCode);
                     console.log('response body:', body);
 
-                    if (resp.statusCode !== 500) {
+                    if (resp.statusCode === 500) {
+                        cb(body, null);
+                    } else if (resp.statusCode !== 410) {
                         return setTimeout(function () {
                             pollJobStatus(jobUuid);
                         }, 1000);
@@ -189,7 +191,12 @@ module.exports = function (grunt) {
             };
 
             pollJobStatus(uuid, function (err, res) {
-                console.error('RES', res);
+                if (err) {
+                    grunt.log.error(err);
+                    return done(false);
+                } else {
+                    console.error('RES', res);
+                }
                 done(false);
             });
             //done();
