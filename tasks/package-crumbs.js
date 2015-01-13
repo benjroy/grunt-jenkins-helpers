@@ -166,7 +166,7 @@ module.exports = function (grunt) {
 
             var uuid = body.job.uuid_str;
 
-            var pollProgress = function (jobUuid, cb) {
+            var pollJobStatus = function (jobUuid, cb) {
                 var pollUrl = NOTARY_API_PATH + '/' + jobUuid;
                 client.post(pollUrl, function (err, res, body) {
                     console.log('response status: %s', res.statusCode);
