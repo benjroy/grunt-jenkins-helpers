@@ -167,7 +167,7 @@ module.exports = function (grunt) {
             var uuid = body.job.uuid_str;
 
             var pollJobStatus = function (jobUuid, cb) {
-                var pollUrl = NOTARY_API_PATH + '/' + jobUuid.replace(/\-/g, '');
+                var pollUrl = NOTARY_API_PATH + '/' + jobUuid;
                 console.log('pollUrl is: %s', pollUrl);
 
                 client.get(pollUrl, function (err, resp, body) {
