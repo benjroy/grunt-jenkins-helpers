@@ -175,6 +175,7 @@ module.exports = function (grunt) {
                     console.log('response body:', body);
 
                     if (res.statusCode !== 500) {
+                        return done(false);
                         return setTimeout(function () {
                             pollJobStatus(jobUuid);
                         }, 1000);
