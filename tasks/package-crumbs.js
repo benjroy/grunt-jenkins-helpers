@@ -116,7 +116,7 @@ module.exports = function (grunt) {
             track: process.env.track,
             app_name: process.env.app_name,
             platform: process.env.platform,
-            job_name_input: process.env.job_name_input,
+            job_name: process.env.job_name,
             build_num: process.env.build_num,
             app_url: process.env.app_url
         };
