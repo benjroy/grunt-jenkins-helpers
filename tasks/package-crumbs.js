@@ -170,12 +170,11 @@ module.exports = function (grunt) {
                 var pollUrl = NOTARY_API_PATH + '/' + jobUuid;
                 console.log('pollUrl is: %s', pollUrl);
 
-                client.post(pollUrl, null, function (err, res, body) {
+                client.get(pollUrl, function (err, res, body) {
                     console.log('response status: %s', res.statusCode);
                     console.log('response body:', body);
 
                     if (res.statusCode !== 500) {
-                        return done(false);
                         return setTimeout(function () {
                             pollJobStatus(jobUuid);
                         }, 1000);
