@@ -148,7 +148,7 @@ module.exports = function (grunt) {
 
         console.log('url is: %s', url);
 
-        client.post(url, function (err, res, body) {
+        client.post(url, null, function (err, res, body) {
             if (err) {
                 grunt.log.error(err);
                 return done(false);
