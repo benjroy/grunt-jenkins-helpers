@@ -19,8 +19,6 @@
   "dependencies": {
     "gift": "^0.5.0",
     "lodash": "^2.4.1",
-    "q": "^1.1.2",
-    "querystring": "^0.2.0",
-    "request-json": "^0.5.0"
+    "q": "^1.1.2"
   }
 }
